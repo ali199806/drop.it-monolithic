@@ -1,0 +1,12 @@
+version: '3'
+services:
+  test-mongo:
+    container_name: mongo
+    image: mongo:latest
+    volumes:
+      - ./data:/data/db
+    ports:
+      - 27017:27017
+#    environment:
+#      MONGODB_INITDB_ROOT_USERNAME: ali
+#      MONGODB_INITDB_ROOT_PASSWORD: a2104516A
