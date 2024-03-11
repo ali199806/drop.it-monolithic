@@ -1,0 +1,100 @@
+.directory-browser {
+  padding: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between; /* Aligns one button to the left, the other to the right */
+  align-items: center;
+  margin-bottom: 20px; /* Adds some space below the buttons */
+}
+
+.new-folder-button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.new-folder-button:hover {
+  background-color: #367c39;
+}
+
+  
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+  }
+  
+  .folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .folder-icon {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .file-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .item-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 150px;
+    margin-top: 10px;
+    font-size: 14px;
+    text-align: center;
+  }
+
+ 
+
+  .error-message {
+    color: red;
+  }
+  
+
+  .folder-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.2s; /* Animation for the transform property */
+    border-radius: 5px; /* Optional: Adds rounded corners to the hover effect */
+  }
+  
+  .folder-item:hover {
+    transform: scale(1.05); /* Scales the item slightly to indicate it's clickable */
+    background-color: #f0f0f0; /* Changes the background color on hover */
+  }
+
+  .button {
+    padding: 10px 15px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .button:hover {
+    opacity: 0.8;
+  }
+  
+  .back-button {
+    background-color: #6c757d;
+  }
+  
+  .back-button:hover {
+    background-color: #5a6268;
+  }

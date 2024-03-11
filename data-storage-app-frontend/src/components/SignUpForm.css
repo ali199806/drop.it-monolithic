@@ -1,4 +1,4 @@
-.login-container {
+.signup-container {
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;
@@ -7,7 +7,7 @@
     background-color: #fff;
   }
   
-  .login-form {
+  .signup-form {
     display: flex;
     flex-direction: column;
   }
@@ -30,8 +30,8 @@
     box-sizing: border-box;
   }
   
-  .login-button {
-    background-color: #007bff;
+  .signup-button {
+    background-color: #28a745;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -40,24 +40,12 @@
     font-size: 16px;
   }
   
-  .login-button:hover {
-    background-color: #0056b3;
+  .signup-button:hover {
+    background-color: #218838;
   }
   
   .error-message {
-    color: #ff3860;
+    color: #dc3545;
     margin-bottom: 15px;
   }
   
-
-  .signup-link {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    color: #007bff;
-    text-decoration: none;
-  }
-  
-  .signup-link:hover {
-    text-decoration: underline;
-  }

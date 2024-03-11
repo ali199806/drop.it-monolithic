@@ -3,8 +3,8 @@ const mongoose = require('mongoose');
 
 const storageSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  totalStorage: { type: Number, default: 10 }, // in MB
-  usedStorage: { type: Number, default: 0 }, // in MB
+  totalStorage: { type: Number, default: 10000000 }, // in Bytes
+  usedStorage: { type: Number, default: 0 }, // in bytes
 });
 
 // Method to update storage usage

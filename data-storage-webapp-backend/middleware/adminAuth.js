@@ -1,8 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const User = require('../models/User');
-const multer = require('multer');
-const Storage = require('../models/Storage');
 
 module.exports = async function(req, res, next) {
   // Get token from header
@@ -21,6 +19,9 @@ module.exports = async function(req, res, next) {
 
     // Check if user is active
     if (!user.isActive) return res.status(401).json({ message: 'User account is inactive' });
+
+    // Check if user is an admin
+    if (!user.isAdmin) return res.status(403).json({ message: 'User is not authorized to access admin routes' });
 
     req.user = decoded.user;
     next();

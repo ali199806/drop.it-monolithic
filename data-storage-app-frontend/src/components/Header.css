@@ -1,0 +1,55 @@
+.app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #123456; /* Example color */
+    color: #ffffff;
+    margin-bottom: 20px;
+}
+  
+  .logo img {
+    height: 50px; /* Adjust based on your logo's size */
+  }
+  
+  .app-name {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .logout-button {
+    padding: 8px 16px;
+    font-size: 16px;
+    color: #123456;
+    background-color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .logout-button:hover {
+    background-color: #f0f0f0;
+  }
+
+  .left {
+    display: flex;
+  }
+  
+  .notification-button {
+    /* padding: 8px; */
+    padding-right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .notification-button:hover {
+    background-color: #f0f0f0; /* Change to desired hover color */
+  }
+  
+  .notification-button img {
+    width: 24px; /* Adjust based on your icon's size */
+    height: 24px; /* Adjust based on your icon's size */
+  }

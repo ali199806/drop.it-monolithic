@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'; // Import useHistory from React 
 
 import axios from 'axios';
 
-import './LoginForm.css'; 
+import './AdminLogin.css'; 
 
 
-function LoginForm() {
+function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -20,7 +20,7 @@ function LoginForm() {
 
     try {
       // Attempt to login
-      const response = await axios.post('http://localhost:4005/api/auth/login', { username, password });
+      const response = await axios.post('http://localhost:4005/api/auth/admin', { username, password });
       const token = response.data.token;
 
       // Save the token in local storage or context for future requests
@@ -35,7 +35,7 @@ function LoginForm() {
       // Construct the URL with basePath/userId
       const browseUrl =  "/browse"
       // const browseUrl = `/browse/${userId}`;
-      navigate('/browse', { state: { token: token } });
+      navigate('/users', { state: { token: token } });
     } catch (error) {
       setError(error.response?.data?.message || 'An error occurred during login.');
     }
@@ -66,8 +66,7 @@ function LoginForm() {
         {error && <p className="error-message">{error}</p>}
         <button type="submit" className="login-button">Login</button>
       </form>
-      <Link to="/signup" className="signup-link">Sign Up</Link>
     </div>
   );
 }
-export default LoginForm;
+export default AdminLogin;

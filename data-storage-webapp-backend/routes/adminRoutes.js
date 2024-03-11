@@ -1,9 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const adminMiddleware = require('../middleware/adminAuth');
+
 
 // Activate user account
-router.put('/user/:id/activate', async (req, res) => {
+router.put('/user/:id/activate', adminMiddleware, async (req, res) => {
     try {
       const userId = req.params.id;
       const user = await User.findByIdAndUpdate(userId, { isActive: true });
@@ -16,7 +18,7 @@ router.put('/user/:id/activate', async (req, res) => {
   });
 
 // Deactivate user account
-router.put('/user/:id/deactivate', async (req, res) => {
+router.put('/user/:id/deactivate', adminMiddleware, async (req, res) => {
     try {
       const userId = req.params.id;
       const user = await User.findByIdAndUpdate(userId, { isActive: false });
@@ -29,7 +31,7 @@ router.put('/user/:id/deactivate', async (req, res) => {
   });
 
 // Delete user account
-router.delete('/user/:id', async (req, res) => {
+router.delete('/user/:id', adminMiddleware, async (req, res) => {
     try {
       const userId = req.params.id;
       const user = await User.findByIdAndDelete(userId);
@@ -42,7 +44,7 @@ router.delete('/user/:id', async (req, res) => {
   });
 
 // Update user account
-router.put('/user/:id', async (req, res) => {
+router.put('/user/:id', adminMiddleware, async (req, res) => {
   try {
     const userId = req.params.id;
     const { username, password, isAdmin, isActive } = req.body;
@@ -62,4 +64,19 @@ router.put('/user/:id', async (req, res) => {
   }
 });
 
+
+// Get all users
+router.get('/user', adminMiddleware, async (req, res) => {
+  try {
+    const users = await User.find(); // Fetch all users
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server Error' });
+  }
+});
+
 module.exports = router;
+
+
+

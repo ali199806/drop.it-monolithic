@@ -1,3 +1,6 @@
 module.exports = {
-    mongoURI: 'mongodb://localhost:27017/development-db'
+    mongoURI: 'mongodb://10.7.0.1:27017/development-db',
+    jwtSecret: 'test-secret',
+    basePath: '/home/ali/userFiles'
   };
+
