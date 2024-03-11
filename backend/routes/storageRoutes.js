@@ -50,7 +50,7 @@ router.get('/usage', jwtMiddleware, async (req, res) => {
   
 
 router.get('/browse', jwtMiddleware, async (req, res) => {
-    const userId = req.user.id; // Assuming user ID is available from the authentication middleware
+    const userId = req.user.id;
     const path = req.query.path || ''; // Get the relative path from query parameters
   
     try {
@@ -71,7 +71,7 @@ router.get('/browse', jwtMiddleware, async (req, res) => {
 
 router.post('/create-folder', jwtMiddleware, async (req, res) => {
     const userId = req.user.id;
-    const { path, folderName } = req.body; // Assuming the request contains the relative path and the new folder name
+    const { path, folderName } = req.body;
   
     try {
       if (!folderName || folderName=="") {
@@ -97,18 +97,16 @@ router.post('/create-folder', jwtMiddleware, async (req, res) => {
   });
 
   
-  // Multer storage configuration
+// Multer storage configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const storatePath = req.header('path');
+    const storagePath = req.header('path');
 
     // Get the user's ID from the request object
-    const userId = req.user.id; // Assuming user ID is set by authentication middleware
+    const userId = req.user.id; 
     // Construct the path to the user's directory
-    // const userDirectory = path.join(__dirname, '..', 'user_files', userId.toString());
-
-    const userDirectory = path.join(config.basePath, userId.toString(),  storatePath || '');
-    console.log(`Request Path: ${storatePath}`)
+    const userDirectory = path.join(config.basePath, userId.toString(), storagePath || '');
+    console.log(`Request Path: ${storagePath}`);
 
     cb(null, userDirectory);
   },
@@ -119,23 +117,24 @@ const storage = multer.diskStorage({
 
 // Create multer instance with configured storage
 const upload = multer({ storage });
+
 // File upload route using Multer middleware
 router.post('/upload', jwtMiddleware, async (req, res, next) => {
   const userId = req.user.id;
-  const file = req.file; // Assuming you're using multer or similar middleware to handle file uploads
-  const fileSize = file.size; // Size of the uploaded file
+  const file = req.file; 
+  //const fileSize = 13000; // Size of the uploaded file
 
   try {
     // Fetch user's storage information
-    const storage = await Storage.findOne({ userId });
-    if (!storage) {
+    const userStorage = await Storage.findOne({ userId });
+    if (!userStorage) {
       return res.status(404).json({ error: 'User storage information not found' });
     }
 
     // Check if storage usage exceeds threshold
-    const threshold = 10000000; // threshold: 10 MB
-    if (storage.usedStorage + fileSize > threshold) {
-      return res.status(400).json({ error: 'Storage limit exceeded. Cannot upload file.' });
+    const threshold = 10000000; // Threshold: 10 MB
+    if (userStorage.usedStorage  > threshold) {
+      return res.status(400).json({ error: 'Storage limit exceeded. Cannot upload File' });
     }
 
     next(); // Proceed to multer middleware if checks pass
@@ -145,14 +144,18 @@ router.post('/upload', jwtMiddleware, async (req, res, next) => {
   }
 }, upload.single('file'), async (req, res) => {
   const userId = req.user.id;
-  const file = req.file; // Assuming you're using multer or similar middleware to handle file uploads
+  const file = req.file;
   const fileSize = file.size; // Size of the uploaded file
 
   try {
     // Update user's storage usage in the database
-    const storage = await Storage.findOne({userId});
-    storage.usedStorage += fileSize;
-    await storage.save();
+    const userStorage = await Storage.findOne({ userId });
+    userStorage.usedStorage += fileSize;
+    await userStorage.save();
+    
+    if (userStorage.usedStorage + fileSize > threshold) {
+      return res.status(400).json({ error: 'Storage limit exceeded. File Uploaded.' });
+    }
 
     res.json({ message: 'File uploaded successfully' });
   } catch (error) {
@@ -188,7 +191,7 @@ router.get('/download', jwtMiddleware, (req, res) => {
 // Endpoint to fetch detailed info about a file or folder
 router.get('/info', jwtMiddleware, async (req, res) => {
   const userId = req.user.id;
-  const itemPath = req.query.path; // Expecting a full path to the item or a relative path from the user's root directory
+  const itemPath = req.query.path; 
 
   if (!itemPath) {
     return res.status(400).send('Path is required');
@@ -208,18 +211,9 @@ router.get('/info', jwtMiddleware, async (req, res) => {
       size: stats.size,
       createdAt: stats.birthtime,
       updatedAt: stats.mtime,
-      // Assuming the owner is the current user; adjust as needed for your application
       owner: userId,
     };
 
-    // const response = {
-    //   name: "Test",
-    //   type: "Folder",
-    //   size: "11",
-    //   createAt: "",
-    //   updateAt: "",
-    //   owner: "Ali",  
-    // };
 
     res.json(response);
   } catch (error) {
@@ -235,8 +229,8 @@ router.get('/info', jwtMiddleware, async (req, res) => {
 
 router.delete('/delete', jwtMiddleware, async (req, res) => {
   const userId = req.user.id;
-  const itemPath = req.query.path; // Get the path from query parameters
-  const itemType = req.query.type; // Get the item type from query parameters
+  const itemPath = req.query.path; 
+  const itemType = req.query.type; 
   const itemSize = req.query.size
 
 
@@ -245,7 +239,6 @@ router.delete('/delete', jwtMiddleware, async (req, res) => {
   }
 
   try {
-    // Implement logic to delete the file or folder based on the item type
     const fullPath = path.join(config.basePath, userId, itemPath);
     if (itemType === 'file') {
       await fs.promises.unlink(fullPath); // Delete the file

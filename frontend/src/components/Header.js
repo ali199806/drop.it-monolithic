@@ -17,17 +17,15 @@ function Header() {
   const [notifications, setNotifications] = useState([]);
 
   const handleLogout = () => {
-    // Implement logout logic here
     console.log('Logging out...');
-    // For example, clear the token from local storage and redirect to login page
     localStorage.removeItem('token');
-    window.location.href = '/'; // or use your routing library's method to navigate
+    window.location.href = '/'; 
   };
 
   useEffect(() => {
     const fetchNotifications = async () => {
       try {
-        const response = await axios.get(`http://localhost:4005/api/storage/usage`, {
+        const response = await axios.get(`/api/storage/usage`, {
             params: { }, // This is where you pass the path as a query parameter
             headers: {
               'x-auth-token': token,
@@ -56,20 +54,17 @@ function Header() {
     setShowNotificationModal(true);
   };
 
-  // JSX for notification button with dynamic icon
   const notificationButtonIcon = notifications.length > 0 ? bell : notification;
 
 
   return (
     <header className="app-header">
-      {/* Notification modal */}
       {showNotificationModal && <NotificationModal notifications={notifications} onClose={() => setShowNotificationModal(false)} />}
 
       <div className="logo">
-        <img src="path-to-your-logo.png" alt="App Logo" />
+        <img src={require('../icons/icon.png')} alt="App Logo" />
       </div>
-      <h1 className="app-name">Your App Name</h1>
-      {/* Notification button */}
+      <h1 className="app-name">Drop.it</h1>
       <div className="left">
       <button className="notification-button" onClick={handleNotificationButtonClick}>
         <img src={notificationButtonIcon} alt="Notification" />

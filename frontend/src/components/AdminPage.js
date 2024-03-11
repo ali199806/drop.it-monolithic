@@ -23,7 +23,7 @@ const AdminPage = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:4005/api/admin/user', {
+        const response = await axios.get('/api/admin/user', {
             headers: {
               'x-auth-token': token,
             },
@@ -38,11 +38,11 @@ const AdminPage = () => {
 
   // Handle user activation/deactivation
   const handleActivateDeactivate = async (userId, isActive) => {
-    const url = isActive ? 'http://localhost:4005/api/admin/user/' + userId + '/deactivate' : 'http://localhost:4005/api/admin/user/' + userId + '/activate';
+    const url = isActive ? '/api/admin/user/' + userId + '/deactivate' : '/api/admin/user/' + userId + '/activate';
     try {
         const response = await axios.put(
             url,
-            {}, // Empty request body
+            {},
             {
               headers: {
                 'x-auth-token': token,
@@ -63,7 +63,7 @@ const AdminPage = () => {
   // Handle user deletion
   const handleDelete = async (userId) => {
     try {
-      const response = await axios.delete('http://localhost:4005/api/admin/user/' + userId, {
+      const response = await axios.delete('/api/admin/user/' + userId, {
         headers: {
             'x-auth-token': token,
         }

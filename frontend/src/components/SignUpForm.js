@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useHistory from React Router
+import { useNavigate } from 'react-router-dom';
 import './SignUpForm.css'; 
 
 function SignUpForm() {
@@ -15,9 +15,8 @@ function SignUpForm() {
     setError('');
 
     try {
-      const response = await axios.post('http://localhost:4005/api/auth/register', { username, password });
+      const response = await axios.post('/api/auth/register', { username, password });
       console.log('Sign up successful:', response.data.message);
-      // Redirect to login page after successful signup
       navigate('/'); // Redirect to the root route (login page)
     } catch (error) {
       setError(error.response?.data?.message || 'An error occurred during sign up.');

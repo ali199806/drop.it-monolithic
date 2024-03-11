@@ -98,3 +98,8 @@
   .back-button:hover {
     background-color: #5a6268;
   }
+
+  .info-icon {
+    width: 12px;
+    height: 12px;
+  }

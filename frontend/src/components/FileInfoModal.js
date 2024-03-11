@@ -15,7 +15,7 @@ function FileInfoModal({ itemPath, itemType, onClose, visible  }) {
   const handleDelete = async () => {
     try {
       // Retrieve item size before deleting
-      const response = await axios.get(`http://localhost:4005/api/storage/info`, {
+      const response = await axios.get(`/api/storage/info`, {
         params: { path: itemPath },
         headers: {
           'x-auth-token': token,
@@ -23,7 +23,7 @@ function FileInfoModal({ itemPath, itemType, onClose, visible  }) {
       });
       const itemSize = response.data.size;
 
-      await axios.delete(`http://localhost:4005/api/storage/delete`, {
+      await axios.delete(`/api/storage/delete`, {
         params: { path: itemPath, type: itemType , size: itemSize}, // Pass item type in the request
         headers: {
           'x-auth-token': token,
@@ -41,8 +41,8 @@ function FileInfoModal({ itemPath, itemType, onClose, visible  }) {
   useEffect(() => {
     const fetchInfo = async () => {
       try {
-        const response = await axios.get(`http://localhost:4005/api/storage/info`, {
-            params: { path: itemPath }, // This is where you pass the path as a query parameter
+        const response = await axios.get(`/api/storage/info`, {
+            params: { path: itemPath }, 
             headers: {
               'x-auth-token': token,
             },

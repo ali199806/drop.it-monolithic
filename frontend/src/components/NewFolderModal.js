@@ -10,9 +10,7 @@ function NewFolderModal({ visible, onClose, onCreate }) {
 
   const handleCreate = () => {
     if (folderName.trim() !== '') {
-      // Perform new folder creation logic
       onCreate(folderName.trim());
-      // Close the modal
       onClose();
     }
   };

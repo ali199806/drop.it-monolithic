@@ -20,7 +20,7 @@ function AdminLogin() {
 
     try {
       // Attempt to login
-      const response = await axios.post('http://localhost:4005/api/auth/admin', { username, password });
+      const response = await axios.post('/api/auth/admin', { username, password });
       const token = response.data.token;
 
       // Save the token in local storage or context for future requests

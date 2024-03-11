@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom'; // Import useParams to access route parameters
+import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 
@@ -12,7 +12,6 @@ import NewFolderModal from './NewFolderModal';
 import FileInfoModal from './FileInfoModal';
 
 function DirectoryBrowser() {
-//   const { path } = useParams(); // Get the path parameter from the URL
   const [path, setPath] = useState('');
 
   const location = useLocation();
@@ -49,7 +48,6 @@ function DirectoryBrowser() {
     'pdf': require("../icons/pdf-icon.png"),
     'jpg': require("../icons/image-icon.png"),
     'png': require("../icons/image-icon.png"),
-    // Add more file extensions and icons as needed
   };
   
 
@@ -68,7 +66,6 @@ function DirectoryBrowser() {
     return filename.slice((filename.lastIndexOf(".") - 1 >>> 0) + 2);
   }
   
-  // Usage:
 
 
   function getIconForFile(item) {
@@ -106,8 +103,7 @@ function DirectoryBrowser() {
     console.log(`Path: ${path}`)
 
     try {
-      // Send a POST request to the '/upload' endpoint with the form data
-      const response = await axios.post('http://localhost:4005/api/storage/upload', formData, {
+      const response = await axios.post('/api/storage/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'x-auth-token': token,
@@ -128,8 +124,7 @@ function DirectoryBrowser() {
     console.log(path)
     console.log("Inside Create New Folder");
     try {
-      // Implement new folder creation logic here
-      await axios.post('http://localhost:4005/api/storage/create-folder', { path: path || '', folderName }, {
+      await axios.post('/api/storage/create-folder', { path: path || '', folderName }, {
         headers: {
           'x-auth-token': token
         }
@@ -145,8 +140,8 @@ function DirectoryBrowser() {
 
   const fetchFolders = async (path) => {
     try {
-        const response = await axios.get(`http://localhost:4005/api/storage/browse`, {
-            params: { path }, // This is where you pass the path as a query parameter
+        const response = await axios.get(`/api/storage/browse`, {
+            params: { path }, 
             headers: {
               'x-auth-token': token,
             },
@@ -159,7 +154,7 @@ function DirectoryBrowser() {
 
   const handleNewFolder = async () => {
     try {
-      await axios.post('http://localhost:4005/api/storage/create-folder', { path: path || '', folderName: newFolderName }, 
+      await axios.post('/api/storage/create-folder', { path: path || '', folderName: newFolderName }, 
       {
         headers: {
           'x-auth-token': token
@@ -173,33 +168,10 @@ function DirectoryBrowser() {
     }
   };
 
-//   const handleItemClick = (item) => {
-//     if (item.type === 'folder') {
-//       // For folders, fetch the contents using the folder path as a query parameter
-//       const newPath = path ? `${path}/${encodeURIComponent(item.name)}` : encodeURIComponent(item.name);
-//       setPathHistory(prev => [...prev, path]); // Store the current path in history
-//       setPath(newPath); // Update the current path
-//       fetchFolders(newPath); // Fetch the new folder's contents
-//     } else {
-//       // For files, you can trigger a download or preview
-//       console.log(`Opening file: ${item.name}`);
-//       // Implement file opening logic here
-//     }
-//   };
-
-//   const handleBackClick = () => {
-//     // Remove the last path from history and update the current path
-//     setPathHistory(prev => {
-//       const newPathHistory = [...prev];
-//       const prevPath = newPathHistory.pop(); // Remove the last path, which is the current one
-//       fetchFolders(prevPath || ''); // Fetch folders for the previous path or root if undefined
-//       return newPathHistory;
-//     });
-//   };
 
 const downloadFile = async (path) => {
   try {
-    const response = await axios.get(`http://localhost:4005/api/storage/download?path=${encodeURIComponent(path)}`, {
+    const response = await axios.get(`/api/storage/download?path=${encodeURIComponent(path)}`, {
       responseType: 'blob', // Important for correct file download
       headers: {
         'x-auth-token': token
@@ -228,7 +200,7 @@ const handleItemClick = (item) => {
     } else {
       const newPath = path ? `${path}/${encodeURIComponent(item.name).replace(/%20/g, ' ')}` : encodeURIComponent(item.name).replace(/%20/g, ' ');      console.log(`Opening file: ${item.name}`);
       downloadFile(newPath);
-      // Implement file opening logic here
+
     }
   };
 
@@ -244,6 +216,12 @@ const handleItemClick = (item) => {
       return newPathHistory;
     });
   };
+
+
+  const handleCloseUploadModal = () => {
+    setUploadModalVisible(false);
+    fetchFolders(path);
+  }
 
 
 return (
@@ -266,7 +244,7 @@ return (
 
   <UploadModal
         visible={uploadModalVisible}
-        onClose={() => setUploadModalVisible(false)}
+        onClose={() => handleCloseUploadModal()}
         onUpload={(file) => handleUpload(file)}
       />
 <FileInfoModal
@@ -282,8 +260,8 @@ return (
           <img src={getIconForFile(item)} alt={item.type} className="folder-icon" />
           
           <p className="item-name">{item.name}</p>
-          {/* Add an info icon/button here */}
-          <button className="info-button" onClick={(e) => { e.stopPropagation(); handleInfoClick(`${path ? `${path}/` : ''}${item.name}`, item.type); }}>Info</button>
+
+          <img src={require('../icons/info.png')} alt="Info Icon" className="info-icon" onClick={(e) => { e.stopPropagation(); handleInfoClick(`${path ? `${path}/` : ''}${item.name}`, item.type); }} />
         </div>
         
       ))}

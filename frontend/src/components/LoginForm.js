@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom'; // Import Link from React Router
-import { useNavigate } from 'react-router-dom'; // Import useHistory from React Router
+import { useNavigate } from 'react-router-dom'; 
 
 import axios from 'axios';
 
@@ -20,7 +20,7 @@ function LoginForm() {
 
     try {
       // Attempt to login
-      const response = await axios.post('http://localhost:4005/api/auth/login', { username, password });
+      const response = await axios.post('/api/auth/login', { username, password });
       const token = response.data.token;
 
       // Save the token in local storage or context for future requests
@@ -29,12 +29,10 @@ function LoginForm() {
       // Redirect user or show success message
       console.log('Login successful:', token);
       
-      // Here, you can redirect or update the app state based on successful login
       // Get the user ID from the response or wherever it's available
       const userId = response.data.userId;
       // Construct the URL with basePath/userId
       const browseUrl =  "/browse"
-      // const browseUrl = `/browse/${userId}`;
       navigate('/browse', { state: { token: token } });
     } catch (error) {
       setError(error.response?.data?.message || 'An error occurred during login.');
@@ -67,6 +65,7 @@ function LoginForm() {
         <button type="submit" className="login-button">Login</button>
       </form>
       <Link to="/signup" className="signup-link">Sign Up</Link>
+      <Link to="/admin" className="signup-link">Admin Login</Link>
     </div>
   );
 }

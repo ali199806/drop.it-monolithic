@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 
-const fs = require('fs').promises; // Use fs promises for async operations
+const fs = require('fs').promises;
 const path = require('path');
 
 const User = require('../models/User');
@@ -42,8 +42,6 @@ router.post('/register', async (req, res) => {
 
 
     // Directory for user files/
-    // const userDirectory = path.join(__dirname, config.basePath, user._id.toString());
-
     const userDirectory = path.join(config.basePath, user._id.toString());
 
     // Create a directory for the user

@@ -10,9 +10,7 @@ function UploadModal({ visible, onClose, onUpload }) {
 
   const handleUpload = () => {
     if (file) {
-      // Perform file upload logic
       onUpload(file);
-      // Close the modal
       onClose();
     }
   };
