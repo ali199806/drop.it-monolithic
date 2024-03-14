@@ -34,7 +34,7 @@ app.use('/api/storage', storageRoutes);
 
 // For all other requests, serve the React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  res.sendFile(path.join('/usr/src/app/', 'frontend/build', 'index.html'));
 });
 
 // Start server
