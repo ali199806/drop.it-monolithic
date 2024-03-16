@@ -7,6 +7,7 @@ const fs = require('fs');
 const config = require('../config/config');
 const multer = require('multer');
 const path = require('path');
+const threshold = 10000000; // Threshold: 10 MB
 
 // Allocate storage to a new user
 router.post('/allocate', async (req, res) => {
@@ -132,7 +133,6 @@ router.post('/upload', jwtMiddleware, async (req, res, next) => {
     }
 
     // Check if storage usage exceeds threshold
-    const threshold = 10000000; // Threshold: 10 MB
     if (userStorage.usedStorage  > threshold) {
       return res.status(400).json({ error: 'Storage limit exceeded. Cannot upload File' });
     }

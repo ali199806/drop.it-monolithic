@@ -25,7 +25,7 @@ mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: t
   .catch(error => console.error(error));
 
 // Serve static files from the React build folder
-app.use(express.static(path.join('/usr/src/app/', 'frontend/build')));
+app.use(express.static(path.join(config.srcPath, 'frontend/build')));
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -34,7 +34,7 @@ app.use('/api/storage', storageRoutes);
 
 // For all other requests, serve the React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join('/usr/src/app/', 'frontend/build', 'index.html'));
+  res.sendFile(path.join(config.srcPath, 'frontend/build', 'index.html'));
 });
 
 // Start server

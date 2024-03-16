@@ -97,7 +97,11 @@ function DirectoryBrowser() {
   
     // Append the file to the form data
     formData.append('file', file);
-  
+    // Extract the file name from the File object
+    const fileName = file.name;
+
+    // Construct the new path that includes the directory and the file name
+    const fullPath = `${path}/${fileName}`;
     // Append the path to the form data
     formData.append('path', path);
     console.log(`Path: ${path}`)
@@ -114,9 +118,52 @@ function DirectoryBrowser() {
       // Log the response from the server
       console.log(response.data);
     } catch (error) {
-      // Handle error
-      console.error(error);
-    }
+      if (error.response) {
+        
+        const { status, data } = error.response;
+
+        console.error(`Error: ${data.error} (Status code: ${status})`);
+        
+      if (status === 400 && data.error === 'Storage limit exceeded. Cannot upload File') {
+            alert('!!! Error !!! Storage limit exceeded. Cannot upload file.');
+          } else if(status === 400 && data.error === 'Storage limit exceeded. File Uploaded.') {
+            try {
+              // Retrieve item size before deleting
+              const response = await axios.get(`/api/storage/info`, {
+                params: { path: fullPath },
+                headers: {
+                  'x-auth-token': token,
+                },
+              });
+              const itemSize = response.data.size;
+        
+              await axios.delete(`/api/storage/delete`, {
+                params: { path: fullPath, type: 'file' , size: itemSize}, // Pass item type in the request
+                headers: {
+                  'x-auth-token': token,
+                },
+              });
+               // Close the modal after successful deletion
+            } catch (error) {
+              console.error('Failed to delete item:', error);
+              // Handle error appropriately
+            }
+            alert('!!! Warning !!! Cannot upload file. Please choose a file smaller than 10mb');
+          }
+          else {
+            // Handle other status codes or general error
+            alert('An error occurred. Please try again later.');
+          }
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.error(error.request);
+          alert('No response from server. Please check your network connection.');
+        } else {
+          // Something happened in setting up the request that triggered an error
+          console.error('Error', error.message);
+          alert('An unexpected error occurred. Please try again.');
+        }
+      }
   };
   
 
@@ -200,7 +247,6 @@ const handleItemClick = (item) => {
     } else {
       const newPath = path ? `${path}/${encodeURIComponent(item.name).replace(/%20/g, ' ')}` : encodeURIComponent(item.name).replace(/%20/g, ' ');      console.log(`Opening file: ${item.name}`);
       downloadFile(newPath);
-
     }
   };
 
@@ -212,7 +258,6 @@ const handleItemClick = (item) => {
       setPath(prevPath);
       fetchFolders(prevPath);
       console.log(`Current Path: ${prevPath}`);
-
       return newPathHistory;
     });
   };
@@ -221,6 +266,11 @@ const handleItemClick = (item) => {
   const handleCloseUploadModal = () => {
     setUploadModalVisible(false);
     fetchFolders(path);
+  }
+
+  const handleCloseInfoModal = () => {
+    setInfoModalVisible(false)
+    fetchFolders(path)
   }
 
 
@@ -235,7 +285,6 @@ return (
     <button className="button new-folder-button" onClick={() => setUploadModalVisible(true)}>Upload</button>
 
   </div>
-  
   <NewFolderModal
         visible={newFolderModalVisible}
         onClose={() => setNewFolderModalVisible(false)}
@@ -250,7 +299,7 @@ return (
 <FileInfoModal
   itemType={selectedItemType}
   itemPath={selectedItemPath}
-  onClose={() => setInfoModalVisible(false)}
+  onClose={() => handleCloseInfoModal()}
   visible={infoModalVisible}
 />
 

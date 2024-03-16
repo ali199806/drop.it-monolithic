@@ -21,10 +21,6 @@ WORKDIR /usr/src/app
 WORKDIR /usr/src/app/backend
 RUN npm install
 
-# Copy the rest of the application code
-COPY . .
-# Copy the entrypoint script
-WORKDIR /usr/src/app/backend
 
 # Make port 80 available to the world outside this container
 EXPOSE 80
