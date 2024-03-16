@@ -168,6 +168,7 @@ router.post('/upload', jwtMiddleware, async (req, res, next) => {
 router.get('/download', jwtMiddleware, async (req, res) => {
   const userId = req.user.id;
   const requestedPath = req.query.path; // Path to the file or folder to be downloaded
+  const itemType = req.query.itemType
 
   // Construct the absolute path to the requested file or folder
   const absolutePath = path.join(config.basePath, userId, requestedPath);
@@ -182,9 +183,8 @@ router.get('/download', jwtMiddleware, async (req, res) => {
 
     try {
       // Check if the requested path is a file
-      const isFile = fs.statSync(absolutePath).isFile();
 
-      if (isFile) {
+      if (itemType === 'file') {
         // If it's a file, set the Content-Disposition header to attachment to prompt a file download
         res.setHeader('Content-Disposition', `attachment; filename=${path.basename(absolutePath)}`);
 

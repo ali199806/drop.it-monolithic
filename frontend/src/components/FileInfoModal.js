@@ -15,7 +15,7 @@ function FileInfoModal({ itemPath, itemType, onClose, visible  }) {
   const handleDownload = async () => {
     try {
       const response = await axios.get('/api/storage/download', {
-        params: { path: itemPath },
+        params: { path: itemPath,  type: itemType },
         headers: {
           'x-auth-token': token,
         },
