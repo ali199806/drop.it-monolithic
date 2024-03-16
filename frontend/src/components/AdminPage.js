@@ -73,16 +73,16 @@ const AdminPage = () => {
   };
 
   // Handle user deletion
-  const handleDelete = async (userId, storageId) => {
+  const handleDelete = async (Id, storageId) => {
     try {
-      const response = await axios.delete('/api/admin/user/' + userId + '/' + storageId, {
+      const response = await axios.delete('/api/admin/user/' + Id + '/' + storageId, {
 
         headers: {
             'x-auth-token': token,
         }
       });
       if (response.data.message === 'User deleted successfully') {
-        setUsers(users.filter(user => user._id !== userId));
+        setUsers(users.filter(user => user.userId._id !== Id));
       } else {
         console.error('Error deleting user');
       }

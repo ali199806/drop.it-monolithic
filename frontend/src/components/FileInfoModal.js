@@ -12,6 +12,38 @@ function FileInfoModal({ itemPath, itemType, onClose, visible  }) {
 
 
 
+  const handleDownload = async () => {
+    try {
+      const response = await axios.get('/api/storage/download', {
+        params: { path: itemPath },
+        headers: {
+          'x-auth-token': token,
+        },
+        responseType: 'blob', // Set response type to blob to handle file downloads
+      });
+  
+      // Create a blob URL from the response data
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+  
+      // Create an anchor element to trigger the download
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', info.name); // Set the download attribute with the file name
+      document.body.appendChild(link);
+  
+      // Trigger the download
+      link.click();
+  
+      // Cleanup
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Failed to download item:', error);
+      // Handle error appropriately
+    }
+  };
+
   const handleDelete = async () => {
     try {
       // Retrieve item size before deleting
@@ -65,6 +97,9 @@ return (
       visible={visible}
       onCancel={onClose}
       footer={[
+        <Button key="download" type="primary" onClick={handleDownload}>
+          Download
+        </Button>,
         <Button key="delete" type="danger" onClick={handleDelete}>
           Delete
         </Button>,

@@ -8,6 +8,7 @@ const config = require('../config/config');
 const multer = require('multer');
 const path = require('path');
 const threshold = 10000000; // Threshold: 10 MB
+const archiver = require('archiver');
 
 // Allocate storage to a new user
 router.post('/allocate', async (req, res) => {
@@ -164,26 +165,64 @@ router.post('/upload', jwtMiddleware, async (req, res, next) => {
   }
 });
 
-router.get('/download', jwtMiddleware, (req, res) => {
+router.get('/download', jwtMiddleware, async (req, res) => {
   const userId = req.user.id;
-  // Get the path parameter from the request query
-  const filePath = req.query.path;
+  const requestedPath = req.query.path; // Path to the file or folder to be downloaded
 
-  // Construct the absolute path to the file
-  const absolutePath = path.join(config.basePath, userId, filePath);
+  // Construct the absolute path to the requested file or folder
+  const absolutePath = path.join(config.basePath, userId, requestedPath);
 
-  // Check if the file exists
-  fs.access(absolutePath, fs.constants.F_OK, (err) => {
+  // Check if the requested path exists
+  fs.access(absolutePath, fs.constants.F_OK, async (err) => {
     if (err) {
-      console.error(`File not found: ${absolutePath}`);
-      res.status(404).send('File not found');
-    } else {
-      // Set the Content-Disposition header to attachment to prompt a file download
-      res.setHeader('Content-Disposition', 'attachment; filename=' + path.basename(absolutePath));
+      console.error(`File or folder not found: ${absolutePath}`);
+      res.status(404).send('File or folder not found');
+      return;
+    }
 
-      // Create a read stream for the file and pipe it to the response
-      const fileStream = fs.createReadStream(absolutePath);
-      fileStream.pipe(res);
+    try {
+      // Check if the requested path is a file
+      const isFile = fs.statSync(absolutePath).isFile();
+
+      if (isFile) {
+        // If it's a file, set the Content-Disposition header to attachment to prompt a file download
+        res.setHeader('Content-Disposition', `attachment; filename=${path.basename(absolutePath)}`);
+
+        // Create a read stream for the file and pipe it to the response
+        const fileStream = fs.createReadStream(absolutePath);
+        fileStream.pipe(res);
+      } else {
+        // If it's a folder, create a zip file containing the folder
+        const zipFileName = `folder_${Date.now()}.zip`;
+        const zipFilePath = path.join(config.basePath, userId, zipFileName);
+
+        // Create a write stream to the zip file
+        const output = fs.createWriteStream(zipFilePath);
+
+        // Create a zip archive
+        const archive = archiver('zip', {
+          zlib: { level: 9 } // Set compression level
+        });
+
+        // Pipe the archive to the output stream
+        archive.pipe(output);
+
+        // Append the folder to the archive
+        archive.directory(absolutePath, false);
+
+        // Finalize the archive
+        await archive.finalize();
+
+        // Set the Content-Disposition header to attachment to prompt a file download
+        res.setHeader('Content-Disposition', `attachment; filename=${zipFileName}`);
+
+        // Create a read stream for the zip file and pipe it to the response
+        const zipFileStream = fs.createReadStream(zipFilePath);
+        zipFileStream.pipe(res);
+      }
+    } catch (error) {
+      console.error('Error handling download:', error);
+      res.status(500).send('Server error');
     }
   });
 });
