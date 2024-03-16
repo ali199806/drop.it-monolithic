@@ -3,7 +3,8 @@ const router = express.Router();
 const User = require('../models/User');
 const Storage = require('../models/Storage')
 const adminMiddleware = require('../middleware/adminAuth');
-
+const path = require('path');
+const fs = require('fs');
 
 // Activate user account
 router.put('/user/:id/activate', adminMiddleware, async (req, res) => {
@@ -40,6 +41,8 @@ router.delete('/user/:id/:storageId', adminMiddleware, async (req, res) => {
       const storage = await Storage.findByIdAndDelete(storageId);
       if (!user || !storage) return res.status(404).json({ message: 'User not found' });
       res.json({ message: 'User deleted successfully' });
+      const fullPath = path.join(config.basePath, userId);
+      await fs.promises.rmdir(fullPath, { recursive: true }); // Delete the folder recursively
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: 'Server Error' });
