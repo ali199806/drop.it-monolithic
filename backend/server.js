@@ -20,7 +20,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Connect to MongoDB
-mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB Connected'))
   .catch(error => console.error(error));
 
