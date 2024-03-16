@@ -7,7 +7,7 @@ function SignUpForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Get history object from React Router
+  const navigate = useNavigate();
 
 
   const handleSubmit = async (event) => {

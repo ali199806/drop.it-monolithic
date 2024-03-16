@@ -82,7 +82,6 @@ return (
           <p>Size: {info?.size} bytes</p>
           <p>Created At: {info?.createdAt}</p>
           <p>Updated At: {info?.updatedAt}</p>
-          <p>Owner: {info?.owner}</p>
         </div>
       )}
     </Modal>

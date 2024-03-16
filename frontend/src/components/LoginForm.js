@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom'; // Import Link from React Router
+import { Link } from 'react-router-dom'; 
 import { useNavigate } from 'react-router-dom'; 
 
 import axios from 'axios';
@@ -11,7 +11,7 @@ function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Get history object from React Router
+  const navigate = useNavigate();
 
 
   const handleSubmit = async (event) => {

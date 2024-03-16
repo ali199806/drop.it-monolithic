@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
+const Storage = require('../models/Storage')
 const adminMiddleware = require('../middleware/adminAuth');
 
 
@@ -31,11 +32,13 @@ router.put('/user/:id/deactivate', adminMiddleware, async (req, res) => {
   });
 
 // Delete user account
-router.delete('/user/:id', adminMiddleware, async (req, res) => {
+router.delete('/user/:id/:storageId', adminMiddleware, async (req, res) => {
     try {
       const userId = req.params.id;
+      const storageId = req.params.storageId;
       const user = await User.findByIdAndDelete(userId);
-      if (!user) return res.status(404).json({ message: 'User not found' });
+      const storage = await Storage.findByIdAndDelete(storageId);
+      if (!user || !storage) return res.status(404).json({ message: 'User not found' });
       res.json({ message: 'User deleted successfully' });
     } catch (error) {
       console.error(error);
@@ -47,35 +50,57 @@ router.delete('/user/:id', adminMiddleware, async (req, res) => {
 router.put('/user/:id', adminMiddleware, async (req, res) => {
   try {
     const userId = req.params.id;
-    const { username, password, isAdmin, isActive } = req.body;
-    const updates = {};
-    if (username) updates.username = username;
-    if (password) updates.password = password;
-    if (isAdmin !== undefined) updates.isAdmin = isAdmin;
-    if (isActive !== undefined) updates.isActive = isActive;
-
-    const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+    const { username, totalStorage } = req.body;
+    var user;
+    if (username === "") {
+      // Donot Update user
+    }
+    else {
+      user = await User.findByIdAndUpdate(userId, { username }, { new: true });
     if (!user) return res.status(404).json({ message: 'User not found' });
+    }
+    
+
+    // Update storage info
+    const storage = await Storage.findOne({ userId: userId });
+    if (!storage) return res.status(404).json({ message: 'Storage info not found' });
+
+    storage.totalStorage = totalStorage;
+    await storage.save();
 
     res.json({ message: 'User updated successfully', user });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Server Error' });
+    res.status(500).json({ messagecM: 'Server Error' });M
   }
 });
 
-
 // Get all users
+// router.get('/user', adminMiddleware, async (req, res) => {
+//   try {
+//     const users = await User.find(); // Fetch all users
+//     res.json(users);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Server Error' });
+//   }
+// });
+
+// Fetch user information along with storage usage and limit
 router.get('/user', adminMiddleware, async (req, res) => {
   try {
-    const users = await User.find(); // Fetch all users
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10; // Default page size
+    const skip = (page - 1) * pageSize;
+    const users = await Storage.find().populate('userId')
+    .skip(skip)
+    .limit(pageSize);
     res.json(users);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Server Error' });
   }
 });
-
 module.exports = router;
 
 

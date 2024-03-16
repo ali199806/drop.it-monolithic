@@ -29,7 +29,7 @@ function Header() {
   const fetchNotifications = async () => {
     try {
       const response = await axios.get(`/api/storage/usage`, {
-        params: {}, // This is where you pass the path as a query parameter, if needed
+        params: {}, 
         headers: {
           'x-auth-token': token,
         },

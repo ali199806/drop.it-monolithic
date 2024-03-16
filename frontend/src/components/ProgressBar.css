@@ -8,7 +8,7 @@
   }
   
   .progress-bar {
-    background-color: #4caf50; /* Change the color based on your preference */
+    background-color: #4caf50; 
     height: 100%;
     border-radius: 5px;
     transition: width 0.5s ease-in-out;

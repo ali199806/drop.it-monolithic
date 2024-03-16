@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-between; /* Aligns one button to the left, the other to the right */
   align-items: center;
-  margin-bottom: 20px; /* Adds some space below the buttons */
+  margin-bottom: 20px; 
 }
 
 .new-folder-button {

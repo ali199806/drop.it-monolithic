@@ -1,5 +1,5 @@
 import React from 'react';
-import './ProgressBar.css'; // Ensure you have this CSS file for styling
+import './ProgressBar.css'; 
 
 // Helper function to convert bytes to megabytes
 const bytesToMB = (bytes) => (bytes / (1024 * 1024)).toFixed(2);

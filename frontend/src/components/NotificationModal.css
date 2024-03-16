@@ -1,5 +1,5 @@
 .model-overflow {
-    position: fixed; /* or absolute */
+    position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
@@ -18,7 +18,7 @@
     border-radius: 5px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 90%;
-    max-width: 500px; /* Adjust based on your preference */
+    max-width: 500px; 
   }
   
   .close {
