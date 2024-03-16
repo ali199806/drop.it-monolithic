@@ -16,7 +16,6 @@ const app = express();
 // Enable CORS for all routes
 app.use(cors());
 
-// Body parser middleware
 app.use(bodyParser.json());
 
 // Connect to MongoDB
@@ -27,6 +26,7 @@ mongoose.connect(process.env.mongoURI, { useNewUrlParser: true, useUnifiedTopolo
 // mongoose.connect(config.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 //   .then(() => console.log('MongoDB Connected'))
 //   .catch(error => console.error(error));
+
 // Serve static files from the React build folder
 app.use(express.static(path.join(config.srcPath, 'frontend/build')));
 
@@ -41,5 +41,5 @@ app.get('*', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 4005;
+const PORT = process.env.PORT || 80;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
